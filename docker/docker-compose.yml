@@ -1,0 +1,29 @@
+version: '3'
+services:
+  # Web server
+  webserver:
+    build:
+      context: ./webserver/
+      dockerfile: Dockerfile
+      args:
+        - mode
+        - project_id
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - ENV=${ENV}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../.env:/.env
+      - ..:/usr/share/nginx/project
+    networks:
+      - app-network
+
+# Docker Networks
+networks:
+  app-network:
+    driver: bridge
