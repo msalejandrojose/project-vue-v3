@@ -13,7 +13,7 @@ COPY ./nginx/location.conf /etc/nginx/location.conf
 COPY ./nginx/conf.d/server.conf /etc/nginx/conf.d/env.conf
 
 # Exponer el puerto 8000
-EXPOSE 8000
+EXPOSE 8080
 
 # Comando para iniciar el servidor NGINX
 CMD ["sh", "-c", "cd /usr/share/nginx/project/app && npm i && npm run build && nginx -g 'daemon off;'"]
