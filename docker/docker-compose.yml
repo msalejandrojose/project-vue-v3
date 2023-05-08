@@ -15,13 +15,36 @@ services:
       - PROJECT_ID=${PROJECT_ID}
       - ENV=${ENV}
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:8080"
     volumes:
       - ../.env:/.env
       - ..:/usr/share/nginx/project
     networks:
       - app-network
+
+  # Web server
+  proxyserver:
+    build:
+      context: ./proxy-server/
+      dockerfile: Dockerfile
+      args:
+        - mode
+        - project_id
+    container_name: proxyserver
+    restart: unless-stopped
+    tty: true
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - ENV=${ENV}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../.env:/.env
+    networks:
+      - app-network
+    depends_on:
+      - webserver
 
 # Docker Networks
 networks:
