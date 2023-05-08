@@ -22,6 +22,28 @@ services:
     networks:
       - app-network
 
+  # Backoffice server
+  boserver:
+    build:
+      context: ./boserver/
+      dockerfile: Dockerfile
+      args:
+        - mode
+        - project_id
+    container_name: boserver
+    restart: unless-stopped
+    tty: true
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - ENV=${ENV}
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../.env:/.env
+      - ..:/usr/share/nginx/project
+    networks:
+      - app-network
+
   # Web server
   proxyserver:
     build:
@@ -45,6 +67,7 @@ services:
       - app-network
     depends_on:
       - webserver
+      - boserver
 
 # Docker Networks
 networks:
