@@ -3,7 +3,7 @@ services:
   # Web server
   webserver:
     build:
-      context: ./webserver/
+      context: ./front-server/
       dockerfile: Dockerfile
       args:
         - mode
@@ -14,6 +14,7 @@ services:
     environment:
       - PROJECT_ID=${PROJECT_ID}
       - ENV=${ENV}
+      - WEB_URL=${WEB_URL}
     ports:
       - "8080:8080"
     volumes:
@@ -25,7 +26,7 @@ services:
   # Backoffice server
   boserver:
     build:
-      context: ./boserver/
+      context: ./bo-server/
       dockerfile: Dockerfile
       args:
         - mode
@@ -36,6 +37,7 @@ services:
     environment:
       - PROJECT_ID=${PROJECT_ID}
       - ENV=${ENV}
+      - BO_URL=${BO_URL}
     ports:
       - "8081:8081"
     volumes:
@@ -68,6 +70,31 @@ services:
     depends_on:
       - webserver
       - boserver
+
+  # Backoffice server
+  apiserver:
+    build:
+      context: ./api-server/
+      dockerfile: Dockerfile
+      args:
+        - mode
+        - project_id
+    container_name: apiserver
+    restart: unless-stopped
+    tty: true
+    environment:
+      - PROJECT_ID=${PROJECT_ID}
+      - ENV=${ENV}
+      - BO_URL=${BO_URL}
+      - WEB_URL=${WEB_URL}
+      - API_URL=${API_URL}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../.env:/.env
+      - ..:/usr/share/nginx/project
+    networks:
+      - app-network
 
 # Docker Networks
 networks:

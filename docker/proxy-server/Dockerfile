@@ -8,7 +8,9 @@ RUN apk add --no-cache openssl
 
 # Copiar los archivos de configuración
 COPY ./nginx/nginx.conf /etc/nginx/
-COPY ./nginx/location.conf /etc/nginx/location.conf
+COPY ./nginx/location-front.conf /etc/nginx/location-front.conf
+COPY ./nginx/location-bo.conf /etc/nginx/location-bo.conf
+COPY ./nginx/location-api.conf /etc/nginx/location-api.conf
 COPY ./nginx/conf.d/server.conf /etc/nginx/conf.d/env.conf
 COPY ./scripts ./scripts
 COPY ./certs ./certs
