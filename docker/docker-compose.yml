@@ -96,7 +96,30 @@ services:
     networks:
       - app-network
 
+  db:
+    build:
+      context: ./db/
+      dockerfile: Dockerfile
+      args:
+        - mode
+        - project_id
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+
 # Docker Networks
 networks:
   app-network:
     driver: bridge
+
+# Volumes
+volumes:
+  mysqldata:
+    driver: local
+
